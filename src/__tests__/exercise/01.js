@@ -5,6 +5,10 @@ import * as React from 'react'
 import ReactDOM from 'react-dom'
 import Counter from '../../components/counter'
 
+beforeEach(() => {
+  document.body.innerHTML = ''
+})
+
 test('counter increments and decrements when the buttons are clicked', () => {
   // 🐨 create a div to render your component to (💰 document.createElement)
   //
@@ -24,6 +28,32 @@ test('counter increments and decrements when the buttons are clicked', () => {
   //
   // 🐨 cleanup by removing the div from the page (💰 div.remove())
   // 🦉 If you don't cleanup, then it could impact other tests and/or cause a memory leak
+
+  const div = document.createElement('div')
+  document.body.appendChild(div)
+  ReactDOM.render(<Counter/>, div)
+
+  const buttons = div.querySelectorAll('button')
+  const decrement = buttons[0]
+  const increment = buttons[1]
+  const message = div.firstChild.querySelector('div')
+  expect(message.textContent).toEqual("Current count: 0")
+  buttonClick(increment)
+  expect(message.textContent).toEqual("Current count: 1")
+  buttonClick(decrement)
+  expect(message.textContent).toEqual("Current count: 0")
+
+  // div.remove()
 })
+
+const buttonClick = (button) => {
+  const moustEvent = new MouseEvent('click', {
+    bubbles: true,
+    cancelable: true,
+    button: 0,
+  })
+
+  button.dispatchEvent(moustEvent)
+}
 
 /* eslint no-unused-vars:0 */
